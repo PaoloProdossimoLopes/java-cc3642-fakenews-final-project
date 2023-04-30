@@ -23,29 +23,11 @@ public class FakeNewsApplication {
         
         WorldMap map = new WorldMap();
         
-        List<People> peoples = new ArrayList<>();
-        for (int i = 0; i < 20; i++) {
-            Unfected people = new Unfected();
-            peoples.add(people);
-        }
+        List<People> peoples = makePeoples();
+        List<Transformable> transformables = makeTransformables(map, peoples);
+        Map<Integer, ANSIPrinterProvider> ansiProviders = makeANSIProviders();
         
-        Map<Integer, ANSIPrinterProvider> printers = new HashMap();
-        printers.put(SpaceANSIPrinter.IDENTIFIER_MAP, new SpaceANSIPrinter());
-        printers.put(WallANSIPrinter.IDENTIFIER_MAP, new WallANSIPrinter());
-        printers.put(UnfectableANSIPrinter.IDENTIFIER_MAP, new UnfectableANSIPrinter());
-        printers.put(InfectableANSIPrinter.IDENTIFIER_MAP, new InfectableANSIPrinter());
-        printers.put(ImmunableANSIPrinter.IDENTIFIER_MAP, new ImmunableANSIPrinter());
-        printers.put(UnfectedANSIPrinter.IDENTIFIER_MAP, new UnfectedANSIPrinter());
-        printers.put(InfectedANSIPrinter.IDENTIFIER_MAP, new InfectedANSIPrinter());
-        printers.put(ImmunizedANSIPrinter.IDENTIFIER_MAP, new ImmunizedANSIPrinter());
-        
-        List<Transformable> transformables = new ArrayList();
-        transformables.add(new Mantainable(map, peoples));
-        transformables.add(new Immunable(map, peoples));
-        transformables.add(new Infectable(map, peoples));
-        transformables.add(new Unfectable(map, peoples));
-        
-        World world = new World(map, peoples, transformables, printers);
+        World world = new World(map, peoples, transformables, ansiProviders);
         
         Date worldCreationTimestamp = new Date();
 
@@ -58,14 +40,45 @@ public class FakeNewsApplication {
             world.move();
             world.drawWorld();
             
-            System.out.print("\n\n\n\n\n");
+            System.out.print("\n\n");
             
             try {
-                Thread.sleep(500);
-            } catch (Exception e) {
+                Thread.sleep(300);
+            } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
+    }
+    
+    private static List<People> makePeoples() {
+        List<People> peoples = new ArrayList<>();
+        for (int i = 0; i < 20; i++) {
+            Unfected people = new Unfected();
+            peoples.add(people);
+        }
+        return peoples;
+    }
+    
+    private static Map<Integer, ANSIPrinterProvider> makeANSIProviders() {
+        Map<Integer, ANSIPrinterProvider> providers = new HashMap();
+        providers.put(SpaceANSIPrinter.IDENTIFIER_MAP, new SpaceANSIPrinter());
+        providers.put(WallANSIPrinter.IDENTIFIER_MAP, new WallANSIPrinter());
+        providers.put(UnfectableANSIPrinter.IDENTIFIER_MAP, new UnfectableANSIPrinter());
+        providers.put(InfectableANSIPrinter.IDENTIFIER_MAP, new InfectableANSIPrinter());
+        providers.put(ImmunableANSIPrinter.IDENTIFIER_MAP, new ImmunableANSIPrinter());
+        providers.put(UnfectedANSIPrinter.IDENTIFIER_MAP, new UnfectedANSIPrinter());
+        providers.put(InfectedANSIPrinter.IDENTIFIER_MAP, new InfectedANSIPrinter());
+        providers.put(ImmunizedANSIPrinter.IDENTIFIER_MAP, new ImmunizedANSIPrinter());
+        return providers;
+    }
+    
+    private static List<Transformable> makeTransformables(WorldMap map, List<People> peoples) {
+        List<Transformable> transformables = new ArrayList();
+        transformables.add(new Mantainable(map, peoples));
+        transformables.add(new Immunable(map, peoples));
+        transformables.add(new Infectable(map, peoples));
+        transformables.add(new Unfectable(map, peoples));
+        return transformables;
     }
     
     private static void printHeader(Long timeSpend, List<People> peoples) {
@@ -75,7 +88,7 @@ public class FakeNewsApplication {
         Long total_immuned = countPeoplesEqual(Immunized.class, peoples);
         
         System.out.println(":::::::::::::::::::::::::");
-        System.out.println(":: Tempo da simulacao: " + (timeSpend));
+        System.out.println(":: Tempo da simulacao: " + (timeSpend) + " s");
         System.out.println(":: Imunes: " + (total_immuned));
         System.out.println(":: Infectados: " + (total_infected));
         System.out.println(":: Nao Infectados: " + (total_unfected));
