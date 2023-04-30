@@ -21,6 +21,8 @@ public class FakeNewsApplication {
      */
     public static void main(String[] args) {
         
+        WorldMap map = new WorldMap();
+        
         List<People> peoples = new ArrayList<>();
         for (int i = 0; i < 20; i++) {
             Unfected people = new Unfected();
@@ -37,21 +39,26 @@ public class FakeNewsApplication {
         printers.put(InfectedANSIPrinter.IDENTIFIER_MAP, new InfectedANSIPrinter());
         printers.put(ImmunizedANSIPrinter.IDENTIFIER_MAP, new ImmunizedANSIPrinter());
         
-        WorldMap map = new WorldMap();
-        World world = new World(map, peoples, printers);
+        List<Transformable> transformables = new ArrayList();
+        transformables.add(new Mantainable(map, peoples));
+        transformables.add(new Immunable(map, peoples));
+        transformables.add(new Infectable(map, peoples));
+        transformables.add(new Unfectable(map, peoples));
+        
+        World world = new World(map, peoples, transformables, printers);
         
         Date worldCreationTimestamp = new Date();
 
         while (true) {
             Date now = new Date();
             Long timeSpend = (now.getTime() - worldCreationTimestamp.getTime()) / 1000;
-            printHeader(timeSpend);
+            printHeader(timeSpend, peoples);
             
             world.refreshWorld();
-            world.movePeoples();
+            world.move();
             world.drawWorld();
             
-            System.out.print("\n\n\n\n");
+            System.out.print("\n\n\n\n\n");
             
             try {
                 Thread.sleep(500);
@@ -61,10 +68,24 @@ public class FakeNewsApplication {
         }
     }
     
-    private static void printHeader(Long timeSpend) {
+    private static void printHeader(Long timeSpend, List<People> peoples) {
+        
+        Long total_infected = countPeoplesEqual(Infected.class, peoples);
+        Long total_unfected = countPeoplesEqual(Unfected.class, peoples);
+        Long total_immuned = countPeoplesEqual(Immunized.class, peoples);
+        
         System.out.println(":::::::::::::::::::::::::");
-        System.out.println("Tempo da simulacao: " + (timeSpend) + "s");
+        System.out.println(":: Tempo da simulacao: " + (timeSpend));
+        System.out.println(":: Imunes: " + (total_immuned));
+        System.out.println(":: Infectados: " + (total_infected));
+        System.out.println(":: Nao Infectados: " + (total_unfected));
         System.out.println(":::::::::::::::::::::::::");
         System.out.println();
+    }
+    
+    private static <T extends People> Long countPeoplesEqual(Class<T> type, List<People> peoples) {
+        return peoples.stream().filter(people -> {
+            return people.getClass() == type;
+        }).count();
     }
 }

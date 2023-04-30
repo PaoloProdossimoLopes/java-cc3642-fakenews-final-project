@@ -15,10 +15,12 @@ public class World {
     private WorldMap map;
     private final List<People> peoples;
     private final Map<Integer, ANSIPrinterProvider> ansiProviders;
+    private final List<Transformable> transformables;
     
-    public World(WorldMap map, List<People> peoples, Map<Integer, ANSIPrinterProvider> ansiProviders) {
+    public World(WorldMap map, List<People> peoples, List<Transformable> transformables, Map<Integer, ANSIPrinterProvider> ansiProviders) {
         this.map = map;
         this.peoples = peoples;
+        this.transformables = transformables;
         this.ansiProviders = ansiProviders;
     }
     
@@ -26,23 +28,27 @@ public class World {
         map.refreshWorld();
     }
     
-    public void movePeoples() {
+    public void move() {
         for (int index = 0; index < peoples.size(); index++) {
             People people = peoples.get(index);
             people.moveRandom();
-             
-            if (map.isImmunable(people)) {
-                Immunized immunized = new Immunized(people.getX(), people.getY());
-                changePeopleState(immunized, index);
-            } else if (map.isInfectable(people)) {
-                Infected infected = new Infected(people.getX(), people.getY());
-                changePeopleState(infected, index);
-            } else if (map.isUnfectable(people)) {
-                Unfected unfected = new Unfected(people.getX(), people.getY());
-                changePeopleState(unfected, index);
-            } else {
-                map.setMap(people.getCode(), people.getX(), people.getY());
+            
+            for (Transformable transformable: transformables) {
+                transformable.transform(people, index);
             }
+            
+            //            if (map.isImmunable(people)) {
+//                Immunized immunized = new Immunized(people.getX(), people.getY());
+//                changePeopleState(immunized, index);
+//            } else if (map.isInfectable(people)) {
+//                Infected infected = new Infected(people.getX(), people.getY());
+//                changePeopleState(infected, index);
+//            } else if (map.isUnfectable(people)) {
+//                Unfected unfected = new Unfected(people.getX(), people.getY());
+//                changePeopleState(unfected, index);
+//            } else {
+//                map.setMap(people.getCode(), people.getX(), people.getY());
+//            }
         }
     }
     
