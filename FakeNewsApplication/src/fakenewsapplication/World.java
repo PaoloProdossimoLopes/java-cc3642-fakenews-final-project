@@ -39,19 +39,12 @@ public class World {
         }
     }
     
-    private void changePeopleState(People people, int index) {
-        peoples.set(index, people);
-        map.setMap(people.getCode(), people.getX(), people.getY());
-    }
-    
     public void drawWorld() {
-        for (int colounmIndex = 0; colounmIndex < map.getMap().length; colounmIndex++) {
-            for (int rowIndex = 0; rowIndex < map.getMap()[colounmIndex].length; rowIndex++) {
-                int code = map.getMap()[colounmIndex][rowIndex];
-                
+        for (int[] rows : map.getMap()) {
+            for (int code: rows) {
                 String block = ansiProviders.get(code).block();
                 System.out.print(block);
-            } 
+            }
             
             System.out.println();
         }
