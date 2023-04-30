@@ -62,7 +62,7 @@ public class FakeNewsApplication {
     
     private static List<People> makePeoples() {
         List<People> peoples = new ArrayList<>();
-        for (int i = 0; i < 1; i++) {
+        for (int i = 0; i < 5; i++) {
             peoples.add(new People(" "));
         }
         return peoples;

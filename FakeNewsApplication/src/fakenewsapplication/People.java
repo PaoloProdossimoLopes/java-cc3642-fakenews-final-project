@@ -16,10 +16,10 @@ import java.util.UUID;
 public class People {
     private int x;
     private int y;
+    private int code = 4;
     private final String color;
     private final String contact;
     private final List<String> contacts;
-    
     
     public People(String color) {
         this.color = color;
@@ -27,6 +27,14 @@ public class People {
         this.contacts = new ArrayList<>();
         
         setRandomPosition();
+    }
+    
+    public People(String color, int x, int y) {
+        this.color = color;
+        this.contact = UUID.randomUUID().toString();
+        this.contacts = new ArrayList<>();
+        this.x = x;
+        this.y = y;
     }
     
     public void moveRandom() {
@@ -74,5 +82,9 @@ public class People {
 
     public int getY() {
         return y;
+    }
+
+    public int getCode() {
+        return code;
     }
 }
