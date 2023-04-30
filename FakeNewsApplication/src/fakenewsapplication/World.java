@@ -16,10 +16,10 @@ public class World {
     private final List<People> peoples;
     private final Map<Integer, ANSIPrinterProvider> ansiProviders;
     
-    public World(List<People> peoples, Map<Integer, ANSIPrinterProvider> ansiProviders) {
+    public World(WorldMap map, List<People> peoples, Map<Integer, ANSIPrinterProvider> ansiProviders) {
+        this.map = map;
         this.peoples = peoples;
         this.ansiProviders = ansiProviders;
-        this.map = new WorldMap();
     }
     
     public void refreshWorld() {
@@ -30,26 +30,33 @@ public class World {
         for (int index = 0; index < peoples.size(); index++) {
             People people = peoples.get(index);
             people.moveRandom();
-            
-            map.setMap(4, people.getX(), people.getY());
-            
+             
             if (map.isImmunable(people)) {
-                //TODO: Implement process to became immune
+                Immunized immunized = new Immunized(people.getX(), people.getY());
+                changePeopleState(immunized, index);
             } else if (map.isInfectable(people)) {
-                //TODO: Implement process to became infected (if not immune)
+                Infected infected = new Infected(people.getX(), people.getY());
+                changePeopleState(infected, index);
             } else if (map.isUnfectable(people)) {
-                //TODO: Became people unfected
+                Unfected unfected = new Unfected(people.getX(), people.getY());
+                changePeopleState(unfected, index);
+            } else {
+                map.setMap(people.getCode(), people.getX(), people.getY());
             }
         }
+    }
+    
+    private void changePeopleState(People people, int index) {
+        peoples.set(index, people);
+        map.setMap(people.getCode(), people.getX(), people.getY());
     }
     
     public void drawWorld() {
         for (int colounmIndex = 0; colounmIndex < map.getMap().length; colounmIndex++) {
             for (int rowIndex = 0; rowIndex < map.getMap()[colounmIndex].length; rowIndex++) {
-                int identifier = map.getMap()[colounmIndex][rowIndex];
+                int code = map.getMap()[colounmIndex][rowIndex];
                 
-                String block = ansiProviders.get(identifier).block();
-                
+                String block = ansiProviders.get(code).block();
                 System.out.print(block);
             } 
             

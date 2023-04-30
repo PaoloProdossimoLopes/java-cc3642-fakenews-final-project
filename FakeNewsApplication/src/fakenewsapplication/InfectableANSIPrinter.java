@@ -8,12 +8,12 @@ package fakenewsapplication;
  *
  * @author pprod
  */
-public class ImmuneANSIPrinter implements ANSIPrinterProvider {
+public class InfectableANSIPrinter implements ANSIPrinterProvider {
     
-    static final int IDENTIFIER_MAP = 2;
+    static final int IDENTIFIER_MAP = 3;
 
     @Override
     public String block() {
-       return "\033[46m \033[0m";
+        return "\033[41m \033[0m";
     }
 }

@@ -14,27 +14,18 @@ import java.util.UUID;
  * @author pprod
  */
 public class People {
-    private int x;
-    private int y;
-    private int code = 4;
-    private final String color;
+    protected int x;
+    protected int y;
+    private int code;
     private final String contact;
     private final List<String> contacts;
     
-    public People(String color) {
-        this.color = color;
+    public People(int code) {
+        this.code = code;
         this.contact = UUID.randomUUID().toString();
         this.contacts = new ArrayList<>();
         
         setRandomPosition();
-    }
-    
-    public People(String color, int x, int y) {
-        this.color = color;
-        this.contact = UUID.randomUUID().toString();
-        this.contacts = new ArrayList<>();
-        this.x = x;
-        this.y = y;
     }
     
     public void moveRandom() {
@@ -86,5 +77,9 @@ public class People {
 
     public int getCode() {
         return code;
+    }
+
+    public String getContact() {
+        return contact;
     }
 }

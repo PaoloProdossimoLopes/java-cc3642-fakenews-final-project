@@ -20,7 +20,25 @@ public class FakeNewsApplication {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        World world = new World(makePeoples(), makeANSIProviders());
+        
+        List<People> peoples = new ArrayList<>();
+        for (int i = 0; i < 20; i++) {
+            Unfected people = new Unfected();
+            peoples.add(people);
+        }
+        
+        Map<Integer, ANSIPrinterProvider> printers = new HashMap();
+        printers.put(SpaceANSIPrinter.IDENTIFIER_MAP, new SpaceANSIPrinter());
+        printers.put(WallANSIPrinter.IDENTIFIER_MAP, new WallANSIPrinter());
+        printers.put(UnfectableANSIPrinter.IDENTIFIER_MAP, new UnfectableANSIPrinter());
+        printers.put(InfectableANSIPrinter.IDENTIFIER_MAP, new InfectableANSIPrinter());
+        printers.put(ImmunableANSIPrinter.IDENTIFIER_MAP, new ImmunableANSIPrinter());
+        printers.put(UnfectedANSIPrinter.IDENTIFIER_MAP, new UnfectedANSIPrinter());
+        printers.put(InfectedANSIPrinter.IDENTIFIER_MAP, new InfectedANSIPrinter());
+        printers.put(ImmunizedANSIPrinter.IDENTIFIER_MAP, new ImmunizedANSIPrinter());
+        
+        WorldMap map = new WorldMap();
+        World world = new World(map, peoples, printers);
         
         Date worldCreationTimestamp = new Date();
 
@@ -49,22 +67,35 @@ public class FakeNewsApplication {
         System.out.println(":::::::::::::::::::::::::");
         System.out.println();
     }
+}
+
+class UnfectedANSIPrinter implements ANSIPrinterProvider {
     
-    private static Map<Integer, ANSIPrinterProvider> makeANSIProviders() {
-        Map<Integer, ANSIPrinterProvider> printers = new HashMap<>();
-        printers.put(SpaceANSIPrinter.IDENTIFIER_MAP, new SpaceANSIPrinter());
-        printers.put(WallANSIPrinter.IDENTIFIER_MAP, new WallANSIPrinter());
-        printers.put(UnfectedANSIPrinter.IDENTIFIER_MAP, new UnfectedANSIPrinter());
-        printers.put(InfectedANSIPrinter.IDENTIFIER_MAP, new InfectedANSIPrinter());
-        printers.put(ImmuneANSIPrinter.IDENTIFIER_MAP, new ImmuneANSIPrinter());
-        return printers;
-    }
+    static final int IDENTIFIER_MAP = 5;
     
-    private static List<People> makePeoples() {
-        List<People> peoples = new ArrayList<>();
-        for (int i = 0; i < 5; i++) {
-            peoples.add(new People(" "));
-        }
-        return peoples;
+    @Override
+    public String block() {
+        return "\033[42m \033[0m";
     }
 }
+
+class InfectedANSIPrinter implements ANSIPrinterProvider {
+    
+    static final int IDENTIFIER_MAP = 6;
+    
+    @Override
+    public String block() {
+        return "\033[41m \033[0m";
+    }
+}
+
+class ImmunizedANSIPrinter implements ANSIPrinterProvider {
+    
+    static final int IDENTIFIER_MAP = 7;
+    
+    @Override
+    public String block() {
+        return "\033[46m \033[0m";
+    }
+}
+

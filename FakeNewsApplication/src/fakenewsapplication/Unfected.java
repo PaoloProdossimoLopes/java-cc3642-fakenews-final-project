@@ -8,12 +8,14 @@ package fakenewsapplication;
  *
  * @author pprod
  */
-public class UnfectedANSIPrinter implements ANSIPrinterProvider {
+public class Unfected extends People {
+    public Unfected() {
+        super(5);
+    }
     
-    static final int IDENTIFIER_MAP = 4;
-
-    @Override
-    public String block() {
-       return "\033[42m \033[0m";
+    public Unfected(int x, int y) {
+        this();
+        this.x = x;
+        this.y = y;
     }
 }
