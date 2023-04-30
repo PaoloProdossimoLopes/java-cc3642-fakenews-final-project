@@ -36,19 +36,6 @@ public class World {
             for (Transformable transformable: transformables) {
                 transformable.transform(people, index);
             }
-            
-            //            if (map.isImmunable(people)) {
-//                Immunized immunized = new Immunized(people.getX(), people.getY());
-//                changePeopleState(immunized, index);
-//            } else if (map.isInfectable(people)) {
-//                Infected infected = new Infected(people.getX(), people.getY());
-//                changePeopleState(infected, index);
-//            } else if (map.isUnfectable(people)) {
-//                Unfected unfected = new Unfected(people.getX(), people.getY());
-//                changePeopleState(unfected, index);
-//            } else {
-//                map.setMap(people.getCode(), people.getX(), people.getY());
-//            }
         }
     }
     
