@@ -68,34 +68,3 @@ public class FakeNewsApplication {
         System.out.println();
     }
 }
-
-class UnfectedANSIPrinter implements ANSIPrinterProvider {
-    
-    static final int IDENTIFIER_MAP = 5;
-    
-    @Override
-    public String block() {
-        return "\033[42m \033[0m";
-    }
-}
-
-class InfectedANSIPrinter implements ANSIPrinterProvider {
-    
-    static final int IDENTIFIER_MAP = 6;
-    
-    @Override
-    public String block() {
-        return "\033[41m \033[0m";
-    }
-}
-
-class ImmunizedANSIPrinter implements ANSIPrinterProvider {
-    
-    static final int IDENTIFIER_MAP = 7;
-    
-    @Override
-    public String block() {
-        return "\033[46m \033[0m";
-    }
-}
-
