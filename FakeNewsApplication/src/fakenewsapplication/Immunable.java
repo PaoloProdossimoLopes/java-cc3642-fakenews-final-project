@@ -5,15 +5,20 @@
 package fakenewsapplication;
 
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  *
  * @author pprod
  */
 public class Immunable extends Transformable {
+    
+    private final Timer timer;
 
-    public Immunable(WorldMap map, List<People> peoples) {
+    public Immunable(Timer timer, WorldMap map, List<People> peoples) {
         super(map, peoples);
+        this.timer = timer;
     }
 
     @Override
@@ -22,5 +27,14 @@ public class Immunable extends Transformable {
                 
         Immunized immunized = new Immunized(people.getX(), people.getY());
         tranformTo(immunized, index);
+        
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                if (map.isImmunable(immunized)) return;
+                Unfected unfected = new Unfected(immunized.getX(), immunized.getY());
+                tranformTo(unfected, index);
+            }
+         }, 0, 30000);
     }
 }

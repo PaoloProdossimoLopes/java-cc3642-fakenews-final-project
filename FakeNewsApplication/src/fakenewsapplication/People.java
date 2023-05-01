@@ -16,7 +16,7 @@ import java.util.UUID;
 public class People {
     protected int x;
     protected int y;
-    private int code;
+    private final int code;
     private final String contact;
     private final List<String> contacts;
     

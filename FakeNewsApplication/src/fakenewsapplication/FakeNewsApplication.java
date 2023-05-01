@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Timer;
 
 /**
  *
@@ -22,9 +23,10 @@ public class FakeNewsApplication {
     public static void main(String[] args) {
         
         WorldMap map = new WorldMap();
+        Timer timer = new Timer();
         
         List<People> peoples = makePeoples();
-        List<Transformable> transformables = makeTransformables(map, peoples);
+        List<Transformable> transformables = makeTransformables(timer, map, peoples);
         Map<Integer, ANSIPrinterProvider> ansiProviders = makeANSIProviders();
         
         World world = new World(map, peoples, transformables, ansiProviders);
@@ -72,17 +74,16 @@ public class FakeNewsApplication {
         return providers;
     }
     
-    private static List<Transformable> makeTransformables(WorldMap map, List<People> peoples) {
+    private static List<Transformable> makeTransformables(Timer timer, WorldMap map, List<People> peoples) {
         List<Transformable> transformables = new ArrayList();
         transformables.add(new Mantainable(map, peoples));
-        transformables.add(new Immunable(map, peoples));
+        transformables.add(new Immunable(timer, map, peoples));
         transformables.add(new Infectable(map, peoples));
         transformables.add(new Unfectable(map, peoples));
         return transformables;
     }
     
     private static void printHeader(Long timeSpend, List<People> peoples) {
-        
         Long total_infected = countPeoplesEqual(Infected.class, peoples);
         Long total_unfected = countPeoplesEqual(Unfected.class, peoples);
         Long total_immuned = countPeoplesEqual(Immunized.class, peoples);
