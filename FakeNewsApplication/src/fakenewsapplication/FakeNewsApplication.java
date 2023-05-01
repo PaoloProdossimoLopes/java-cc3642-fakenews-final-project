@@ -10,8 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Timer;
-import java.util.stream.Collectors;
-import javax.xml.transform.sax.TransformerHandler;
+import java.util.UUID;
 
 /**
  *
@@ -56,8 +55,8 @@ public class FakeNewsApplication {
     
     private static List<People> makePeoples() {
         List<People> peoples = new ArrayList<>();
-        for (int i = 0; i < 100; i++) {
-            Unfected people = new Unfected();
+        for (int i = 0; i < 3; i++) {
+            Unfected people = new Unfected(UUID.randomUUID().toString(), new ArrayList());
             peoples.add(people);
         }
         return peoples;
@@ -81,7 +80,8 @@ public class FakeNewsApplication {
         transformables.add(new Mantainable(map, peoples));
         transformables.add(new Immunable(timer, map, peoples));
         transformables.add(new Infectable(map, peoples));
-        transformables.add(new InfectP2P(map, peoples));
+        transformables.add(new ChangeContact(map, peoples));
+//        transformables.add(new InfectP2P(map, peoples));
         transformables.add(new Unfectable(map, peoples));
         return transformables;
     }
@@ -90,7 +90,7 @@ public class FakeNewsApplication {
         Long total_infected = countPeoplesEqual(Infected.class, peoples);
         Long total_unfected = countPeoplesEqual(Unfected.class, peoples);
         Long total_immuned = countPeoplesEqual(Immunized.class, peoples);
-        
+         
         System.out.println(":::::::::::::::::::::::::");
         System.out.println(":: Tempo da simulacao: " + (timeSpend) + " s");
         System.out.println(":: Imunes: " + (total_immuned));
@@ -104,6 +104,24 @@ public class FakeNewsApplication {
         return peoples.stream().filter(people -> {
             return people.getClass() == type;
         }).count();
+    }
+}
+
+class ChangeContact extends Transformable {
+
+    public ChangeContact(WorldMap map, List<People> peoples) {
+        super(map, peoples);
+    }
+
+    @Override
+    public void transform(People people, int index) {
+        List<People> peopleClosers = findPeopleClosers(people);
+        for (People peopleCloser: peopleClosers) {
+            if (people.getContacts().contains(peopleCloser.getContact())) continue;
+            
+            people.addContact(peopleCloser.getContact());
+            peopleCloser.addContact(people.getContact());
+        }
     }
 }
 
@@ -121,39 +139,7 @@ class InfectP2P extends Transformable {
         List<People> infectablePeoples = findPeopleClosers(infected);
         for (People infectablePeople: infectablePeoples) {
             int infectableIndex = peoples.indexOf(infectablePeople);
-            tranformTo(new Infected(people.getX(), people.getY()), infectableIndex);
+            tranformTo(new Infected(people.getContact(), people.getContacts(), people.getX(), people.getY()), infectableIndex);
         }
-    }
-    
-    private List<People> findPeopleClosers(Infected infected) {
-       return peoples.stream()
-            .filter(people -> {
-                if ((people instanceof Unfected) == false) return false;
-                
-                int infectedX = infected.getX();
-                int indectdeY = infected.getY();
-                
-                int peopleX = people.getX();
-                int peopleY = people.getY();
-                
-                boolean stayInSamePosition = peopleX == infectedX && peopleY == indectdeY;
-                if (stayInSamePosition) return true;
-                
-                boolean stayInUpperPosition = peopleX == infectedX && peopleY == indectdeY + 1;
-                if (stayInUpperPosition) return true;
-                
-                boolean stayInLowerPosition = peopleX == infectedX && peopleY == indectdeY - 1;
-                if (stayInLowerPosition) return true;
-                
-                boolean stayRightPosition = peopleX == infectedX + 1 && peopleY == indectdeY;
-                if (stayRightPosition) return true;
-                
-                boolean stayLeftPosition = peopleX == infectedX - 1 && peopleY == indectdeY;
-                if (stayLeftPosition) return true;
-                
-                return false;
-            })
-            .toList()
-        ;
     }
 }

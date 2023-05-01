@@ -20,7 +20,7 @@ public class Infectable extends Transformable {
     public void transform(People people, int index) {
         if (map.isInfectable(people) == false || people instanceof Immunized) return;
         
-        Infected infectable = new Infected(people.getX(), people.getY());
+        Infected infectable = new Infected(people.getContact(), people.getContacts(), people.getX(), people.getY());
         tranformTo(infectable, index);
     }
 }

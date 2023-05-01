@@ -4,13 +4,15 @@
  */
 package fakenewsapplication;
 
+import java.util.List;
+
 /**
  *
  * @author pprod
  */
 public class Immunized extends People {
-    public Immunized(int x, int y) {
-        super(7);
+    public Immunized(String contact, List<String> contacts, int x, int y) {
+        super(7, contact, contacts);
         this.x = x;
         this.y = y;
     }

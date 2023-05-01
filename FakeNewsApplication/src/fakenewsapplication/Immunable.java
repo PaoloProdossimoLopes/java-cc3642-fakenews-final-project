@@ -25,14 +25,14 @@ public class Immunable extends Transformable {
     public void transform(People people, int index) {
         if (map.isImmunable(people) == false) return;
                 
-        Immunized immunized = new Immunized(people.getX(), people.getY());
+        Immunized immunized = new Immunized(people.getContact(), people.getContacts(), people.getX(), people.getY());
         tranformTo(immunized, index);
         
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
                 if (map.isImmunable(immunized)) return;
-                Unfected unfected = new Unfected(immunized.getX(), immunized.getY());
+                Unfected unfected = new Unfected(immunized.getContact(), immunized.getContacts(), immunized.getX(), immunized.getY());
                 tranformTo(unfected, index);
             }
          }, 0, 30000);

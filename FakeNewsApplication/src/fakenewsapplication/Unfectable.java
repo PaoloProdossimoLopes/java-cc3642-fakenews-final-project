@@ -20,7 +20,7 @@ public class Unfectable extends Transformable {
     public void transform(People people, int index) {
         if (map.isUnfectable(people) == false) return;
         
-        Unfected unfectable = new Unfected(people.getX(), people.getY());
+        Unfected unfectable = new Unfected(people.getContact(), people.getContacts(), people.getX(), people.getY());
         tranformTo(unfectable, index);
     }
 }

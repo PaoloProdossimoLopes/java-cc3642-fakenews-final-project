@@ -20,10 +20,10 @@ public class People {
     private final String contact;
     private final List<String> contacts;
     
-    public People(int code) {
+    public People(int code, String contact, List<String> contacts) {
         this.code = code;
-        this.contact = UUID.randomUUID().toString();
-        this.contacts = new ArrayList<>();
+        this.contact = contact;
+        this.contacts = contacts;
         
         setRandomPosition();
     }
@@ -81,5 +81,13 @@ public class People {
 
     public String getContact() {
         return contact;
+    }
+
+    public List<String> getContacts() {
+        return contacts;
+    }
+    
+    public void addContact(String contact) {
+        contacts.add(contact);
     }
 }

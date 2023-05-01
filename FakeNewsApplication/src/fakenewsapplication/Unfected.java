@@ -4,17 +4,20 @@
  */
 package fakenewsapplication;
 
+import java.util.List;
+
 /**
  *
  * @author pprod
  */
 public class Unfected extends People {
-    public Unfected() {
-        super(5);
+    
+    public Unfected(String contact, List<String> contacts) {
+        super(5, contact, contacts);
     }
     
-    public Unfected(int x, int y) {
-        this();
+    public Unfected(String contact, List<String> contacts, int x, int y) {
+        this(contact, contacts);
         this.x = x;
         this.y = y;
     }
