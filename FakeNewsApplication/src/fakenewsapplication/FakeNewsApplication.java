@@ -10,6 +10,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Timer;
+import java.util.stream.Collectors;
+import javax.xml.transform.sax.TransformerHandler;
 
 /**
  *
@@ -79,6 +81,7 @@ public class FakeNewsApplication {
         transformables.add(new Mantainable(map, peoples));
         transformables.add(new Immunable(timer, map, peoples));
         transformables.add(new Infectable(map, peoples));
+        transformables.add(new InfectP2P(map, peoples));
         transformables.add(new Unfectable(map, peoples));
         return transformables;
     }
@@ -101,5 +104,56 @@ public class FakeNewsApplication {
         return peoples.stream().filter(people -> {
             return people.getClass() == type;
         }).count();
+    }
+}
+
+class InfectP2P extends Transformable {
+
+    public InfectP2P(WorldMap map, List<People> peoples) {
+        super(map, peoples);
+    }
+
+    @Override
+    public void transform(People people, int index) {
+        Infected infected = (people instanceof Infected ? (Infected) people : null);
+        if (infected == null) return;
+        
+        List<People> infectablePeoples = findPeopleClosers(infected);
+        for (People infectablePeople: infectablePeoples) {
+            int infectableIndex = peoples.indexOf(infectablePeople);
+            tranformTo(new Infected(people.getX(), people.getY()), infectableIndex);
+        }
+    }
+    
+    private List<People> findPeopleClosers(Infected infected) {
+       return peoples.stream()
+            .filter(people -> {
+                if ((people instanceof Unfected) == false) return false;
+                
+                int infectedX = infected.getX();
+                int indectdeY = infected.getY();
+                
+                int peopleX = people.getX();
+                int peopleY = people.getY();
+                
+                boolean stayInSamePosition = peopleX == infectedX && peopleY == indectdeY;
+                if (stayInSamePosition) return true;
+                
+                boolean stayInUpperPosition = peopleX == infectedX && peopleY == indectdeY + 1;
+                if (stayInUpperPosition) return true;
+                
+                boolean stayInLowerPosition = peopleX == infectedX && peopleY == indectdeY - 1;
+                if (stayInLowerPosition) return true;
+                
+                boolean stayRightPosition = peopleX == infectedX + 1 && peopleY == indectdeY;
+                if (stayRightPosition) return true;
+                
+                boolean stayLeftPosition = peopleX == infectedX - 1 && peopleY == indectdeY;
+                if (stayLeftPosition) return true;
+                
+                return false;
+            })
+            .toList()
+        ;
     }
 }
