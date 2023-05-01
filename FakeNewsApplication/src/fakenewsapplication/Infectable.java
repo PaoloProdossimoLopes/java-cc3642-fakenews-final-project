@@ -18,7 +18,7 @@ public class Infectable extends Transformable {
 
     @Override
     public void transform(People people, int index) {
-        if (map.isInfectable(people) == false) return;
+        if (map.isInfectable(people) == false || people instanceof Immunized) return;
         
         Infected infectable = new Infected(people.getX(), people.getY());
         tranformTo(infectable, index);

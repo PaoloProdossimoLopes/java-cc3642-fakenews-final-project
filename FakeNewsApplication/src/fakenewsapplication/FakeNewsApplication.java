@@ -54,7 +54,7 @@ public class FakeNewsApplication {
     
     private static List<People> makePeoples() {
         List<People> peoples = new ArrayList<>();
-        for (int i = 0; i < 20; i++) {
+        for (int i = 0; i < 100; i++) {
             Unfected people = new Unfected();
             peoples.add(people);
         }
