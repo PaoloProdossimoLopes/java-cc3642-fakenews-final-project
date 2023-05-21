@@ -43,7 +43,6 @@ public class FakeNewsApplication {
             world.move();
             world.drawWorld();
             
-            System.out.print("\n\n");
             
             try {
                 Thread.sleep(300);
