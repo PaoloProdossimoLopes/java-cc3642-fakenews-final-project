@@ -33,8 +33,6 @@ public class World {
             People people = peoples.get(index);
             people.moveRandom();
             
-            System.out.println("Toal de contatos para " + people.getContact() + "tem " + people.getContacts().size() + " contatos");
-            
             for (Transformable transformable: transformables) {
                 transformable.transform(people, index);
             }

@@ -81,7 +81,6 @@ public class FakeNewsApplication {
         transformables.add(new Immunable(timer, map, peoples));
         transformables.add(new Infectable(map, peoples));
         transformables.add(new ChangeContact(map, peoples));
-//        transformables.add(new InfectP2P(map, peoples));
         transformables.add(new Unfectable(map, peoples));
         return transformables;
     }
@@ -121,25 +120,6 @@ class ChangeContact extends Transformable {
             
             people.addContact(peopleCloser.getContact());
             peopleCloser.addContact(people.getContact());
-        }
-    }
-}
-
-class InfectP2P extends Transformable {
-
-    public InfectP2P(WorldMap map, List<People> peoples) {
-        super(map, peoples);
-    }
-
-    @Override
-    public void transform(People people, int index) {
-        Infected infected = (people instanceof Infected ? (Infected) people : null);
-        if (infected == null) return;
-        
-        List<People> infectablePeoples = findPeopleClosers(infected);
-        for (People infectablePeople: infectablePeoples) {
-            int infectableIndex = peoples.indexOf(infectablePeople);
-            tranformTo(new Infected(people.getContact(), people.getContacts(), people.getX(), people.getY()), infectableIndex);
         }
     }
 }
