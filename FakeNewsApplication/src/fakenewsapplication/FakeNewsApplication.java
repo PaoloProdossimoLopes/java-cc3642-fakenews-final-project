@@ -55,7 +55,7 @@ public class FakeNewsApplication {
     
     private static List<People> makePeoples() {
         List<People> peoples = new ArrayList<>();
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 100; i++) {
             Unfected people = new Unfected(UUID.randomUUID().toString(), new ArrayList());
             peoples.add(people);
         }
@@ -77,10 +77,10 @@ public class FakeNewsApplication {
     
     private static List<Transformable> makeTransformables(Timer timer, WorldMap map, List<People> peoples) {
         List<Transformable> transformables = new ArrayList();
+        transformables.add(new ChangeContact(map, peoples));
         transformables.add(new Mantainable(map, peoples));
         transformables.add(new Immunable(timer, map, peoples));
         transformables.add(new Infectable(map, peoples));
-        transformables.add(new ChangeContact(map, peoples));
         transformables.add(new Unfectable(map, peoples));
         return transformables;
     }
@@ -89,12 +89,16 @@ public class FakeNewsApplication {
         Long total_infected = countPeoplesEqual(Infected.class, peoples);
         Long total_unfected = countPeoplesEqual(Unfected.class, peoples);
         Long total_immuned = countPeoplesEqual(Immunized.class, peoples);
+        
+        String immunedBlock = new ImmunizedANSIPrinter().block();
+        String infectedBlock = new InfectedANSIPrinter().block();
+        String unfectedBlock = new UnfectedANSIPrinter().block();
          
         System.out.println(":::::::::::::::::::::::::");
         System.out.println(":: Tempo da simulacao: " + (timeSpend) + " s");
-        System.out.println(":: Imunes: " + (total_immuned));
-        System.out.println(":: Infectados: " + (total_infected));
-        System.out.println(":: Nao Infectados: " + (total_unfected));
+        System.out.println(":: " + (immunedBlock) + " Imunes: " + (total_immuned));
+        System.out.println(":: " + (infectedBlock) + " Infectados: " + (total_infected));
+        System.out.println(":: " + (unfectedBlock) + " Nao Infectados: " + (total_unfected));
         System.out.println(":::::::::::::::::::::::::");
         System.out.println();
     }
@@ -103,23 +107,5 @@ public class FakeNewsApplication {
         return peoples.stream().filter(people -> {
             return people.getClass() == type;
         }).count();
-    }
-}
-
-class ChangeContact extends Transformable {
-
-    public ChangeContact(WorldMap map, List<People> peoples) {
-        super(map, peoples);
-    }
-
-    @Override
-    public void transform(People people, int index) {
-        List<People> peopleClosers = findPeopleClosers(people);
-        for (People peopleCloser: peopleClosers) {
-            if (people.getContacts().contains(peopleCloser.getContact())) continue;
-            
-            people.addContact(peopleCloser.getContact());
-            peopleCloser.addContact(people.getContact());
-        }
     }
 }

@@ -22,5 +22,18 @@ public class Unfectable extends Transformable {
         
         Unfected unfectable = new Unfected(people.getContact(), people.getContacts(), people.getX(), people.getY());
         tranformTo(unfectable, index);
+        
+        List<String> contactsNumber = unfectable.getContacts();
+        for (int contactIndex = 0; contactIndex < contactsNumber.size(); contactIndex++) {
+            for (int peopleIndex = 0; peopleIndex < peoples.size(); peopleIndex++) {
+                People p = peoples.get(peopleIndex);
+                final boolean isContact = p.getContact().equals(contactsNumber.get(contactIndex));
+                final boolean isNotInInfectedArea = map.isInfectable(p) == false;
+                if (isContact && isNotInInfectedArea) {
+                    Unfected contactUnfeted = new Unfected(p.getContact(), p.getContacts(), p.getX(), p.getY());
+                    tranformTo(contactUnfeted, peopleIndex);
+                }
+            }
+        }
     }
 }

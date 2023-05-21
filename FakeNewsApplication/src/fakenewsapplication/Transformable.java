@@ -25,30 +25,41 @@ public class Transformable {
        return peoples.stream()
             .filter(p -> (p.getContact().equals(people.getContact()) == false))
             .filter(p -> {
-                if ((people instanceof Unfected) == false) return false;
+                int mainPeopleX = people.getX();
+                int mainPeopleY = people.getY();
                 
-                int infectedX = people.getX();
-                int indectdeY = people.getY();
+                int possiblePeopleCloserX = p.getX();
+                int possiblePeopleCloserY = p.getY();
                 
-                int peopleX = p.getX();
-                int peopleY = p.getY();
+                boolean isSamePosition = (
+                    mainPeopleX == possiblePeopleCloserX &&
+                    mainPeopleY == possiblePeopleCloserY
+                );
+                boolean isUpper = (
+                    mainPeopleX == possiblePeopleCloserX &&
+                    mainPeopleY + 1 == possiblePeopleCloserY
+                );
+                boolean isBellow = (
+                    mainPeopleX == possiblePeopleCloserX &&
+                    mainPeopleY - 1 == possiblePeopleCloserY
+                );
+                boolean isRight = (
+                    mainPeopleX + 1 == possiblePeopleCloserX &&
+                    mainPeopleY == possiblePeopleCloserY
+                );
+                boolean isLeft = (
+                    mainPeopleX - 1 == possiblePeopleCloserX &&
+                    mainPeopleY == possiblePeopleCloserY
+                );
                 
-                boolean stayInSamePosition = peopleX == infectedX && peopleY == indectdeY;
-                if (stayInSamePosition) return true;
                 
-                boolean stayInUpperPosition = peopleX == infectedX && peopleY == indectdeY + 1;
-                if (stayInUpperPosition) return true;
+                if (isSamePosition) return true;
+                else if (isUpper) return true;
+                else if (isBellow) return true;
+                else if (isRight) return true;
+                else if (isLeft) return true;
+                else return false;
                 
-                boolean stayInLowerPosition = peopleX == infectedX && peopleY == indectdeY - 1;
-                if (stayInLowerPosition) return true;
-                
-                boolean stayRightPosition = peopleX == infectedX + 1 && peopleY == indectdeY;
-                if (stayRightPosition) return true;
-                
-                boolean stayLeftPosition = peopleX == infectedX - 1 && peopleY == indectdeY;
-                if (stayLeftPosition) return true;
-                
-                return false;
             })
             .toList()
         ;
